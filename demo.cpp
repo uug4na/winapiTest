@@ -51,7 +51,7 @@ int WINAPI main(HINSTANCE hInst, HINSTANCE hPrevInst, LPSTR args, int ncmdshow)
     if (!RegisterClassW(&wc))
         return -1;
 
-    CreateWindowW(L"workPlease", L"Windowontsor", WS_OVERLAPPEDWINDOW | WS_VISIBLE, 100, 100, 500, 500,
+    CreateWindowW(L"workPlease", L"plsplspls", WS_OVERLAPPEDWINDOW | WS_VISIBLE, 100, 100, 500, 500,
         NULL, NULL, NULL, NULL);
 
     MSG msg = { 0 };
