@@ -2,6 +2,7 @@
 #include <WinUser.h>
 #include <iostream>
 #include <fstream>
+#include <stdio.h>
 #define FILE_MENU_NEW 1
 using namespace std;
 
@@ -117,3 +118,6 @@ void encrypt() {
     cout << "donekk:" << fileName << endl;
 }
 
+///void decrypt() {
+///    cout << "decrypting kk:)";
+///}
