@@ -2,10 +2,25 @@
 #include <WinUser.h>
 #include <iostream>
 #include <fstream>
+#include <string>
+#include "dirent.h"
+#include <sys/types.h>
 #define FILE_MENU_NEW 1
 #define ENC_BUTTON 123
 #define DEC_BUTTON 69
 using namespace std;
+
+void getFile() {
+    DIR* dr;
+    struct dirent* en;
+    dr = opendir("."); //open all directory
+    if (dr) {
+        while ((en = readdir(dr)) != NULL) {
+            cout << " \n" << en->d_name; //print all directory name
+        }
+        closedir(dr); //close all directory
+    }
+}
 
 void encrypt() {
     char fileName[30], ch;
@@ -32,6 +47,9 @@ void encrypt() {
     cout << "donekk: " << fileName << endl;
 }
 
+void decrypt() {
+    cout << "decrypting kk:)" << endl;
+}
 
 LRESULT CALLBACK WindowProcedure(HWND, UINT, WPARAM, LPARAM);
 void Menus(HWND hWnd);
@@ -60,7 +78,7 @@ LRESULT CALLBACK WindowProcedure(HWND hWnd, UINT msg, WPARAM wp, LPARAM lp)
             encrypt();
             break;
         case DEC_BUTTON:
-            cout << "lmao" << endl;
+            getFile();
         }
         break;
     case WM_CREATE:
@@ -127,7 +145,3 @@ void button(HWND hWnd)
         (HINSTANCE)GetWindowLongPtr(hWnd, GWLP_HINSTANCE), NULL);
 }
 
-
-///void decrypt() {
-///    cout << "decrypting kk:)";
-///}
