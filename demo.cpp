@@ -3,6 +3,8 @@
 #include <iostream>
 #include <fstream>
 #define FILE_MENU_NEW 1
+#define ENC_BUTTON 123
+#define DEC_BUTTON 69
 using namespace std;
 
 void encrypt() {
@@ -27,15 +29,15 @@ void encrypt() {
     }
     fin.close();
     fout.close();
-    cout << "donekk:" << fileName << endl;
+    cout << "donekk: " << fileName << endl;
 }
 
 
 LRESULT CALLBACK WindowProcedure(HWND, UINT, WPARAM, LPARAM);
 void Menus(HWND hWnd);
-void AddText(HWND);
-
+void button(HWND);
 HMENU hMenu;
+
 
 LRESULT CALLBACK WindowProcedure(HWND hWnd, UINT msg, WPARAM wp, LPARAM lp)
 {
@@ -54,12 +56,16 @@ LRESULT CALLBACK WindowProcedure(HWND hWnd, UINT msg, WPARAM wp, LPARAM lp)
         case 4:
             DestroyWindow(hWnd);
             break;
+        case ENC_BUTTON:
+            encrypt();
+            break;
+        case DEC_BUTTON:
+            cout << "lmao" << endl;
         }
-
         break;
     case WM_CREATE:
         Menus(hWnd);
-        AddText(hWnd);
+        button(hWnd);
         break;
     case WM_DESTROY:
         PostQuitMessage(0);
@@ -111,13 +117,13 @@ void Menus(HWND hWnd)
     SetMenu(hWnd, hMenu);
 }
 
-void AddText(HWND hWnd)
+void button(HWND hWnd)
 {
-    CreateWindow(
-        L"BUTTON", L"Encrypt", WS_TABSTOP | WS_VISIBLE | WS_CHILD | BS_DEFPUSHBUTTON, 10,40,130,100,hWnd,NULL,       
+    CreateWindowW(
+        L"BUTTON", L"Encrypt", WS_TABSTOP | WS_VISIBLE | WS_CHILD | BS_DEFPUSHBUTTON, 10,40,130,100,hWnd,(HMENU)ENC_BUTTON,       
         (HINSTANCE)GetWindowLongPtr(hWnd, GWLP_HINSTANCE),NULL);    
-    CreateWindow(
-        L"BUTTON", L"Decrypt", WS_TABSTOP | WS_VISIBLE | WS_CHILD | BS_DEFPUSHBUTTON, 150,40, 130, 100, hWnd, NULL,
+    CreateWindowW(
+        L"BUTTON", L"Decrypt", WS_TABSTOP | WS_VISIBLE | WS_CHILD | BS_DEFPUSHBUTTON, 150,40, 130, 100, hWnd, (HMENU)DEC_BUTTON,
         (HINSTANCE)GetWindowLongPtr(hWnd, GWLP_HINSTANCE), NULL);
 }
 
