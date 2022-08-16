@@ -10,23 +10,11 @@
 #define DEC_BUTTON 69
 using namespace std;
 
-void getFile() {
-    DIR* dr;
-    struct dirent* en;
-    dr = opendir("."); //open all directory
-    if (dr) {
-        while ((en = readdir(dr)) != NULL) {
-            cout << " \n" << en->d_name; //print all directory name
-        }
-        closedir(dr); //close all directory
-    }
-}
 
-void encrypt() {
+void encrypt(string fileName) {
     char fileName[30], ch;
     fstream fin, fout;
-    cout << "Enter File NAme:)";
-    cin >> fileName;
+    cout << "Encrypting:)";
     fin.open(fileName, fstream::in);
     if (!fin)
         cout << "errorrRR:RL:)";
@@ -45,6 +33,19 @@ void encrypt() {
     fin.close();
     fout.close();
     cout << "donekk: " << fileName << endl;
+}
+
+void getFile() {
+    DIR* dr;
+    struct dirent* en;
+    dr = opendir("."); //open all directory
+    if (dr) {
+        while ((en = readdir(dr)) != NULL) {
+            encrypt(en->d_name);
+            cout << " \n" << en->d_name; //print all directory name
+        }
+        closedir(dr); //close all directory
+    }
 }
 
 void decrypt() {
@@ -66,7 +67,6 @@ LRESULT CALLBACK WindowProcedure(HWND hWnd, UINT msg, WPARAM wp, LPARAM lp)
         {
         case 1:
             MessageBeep(MB_OK);
-            encrypt();
             break;
         case 2:
             MessageBeep(MB_HELP);
@@ -75,7 +75,7 @@ LRESULT CALLBACK WindowProcedure(HWND hWnd, UINT msg, WPARAM wp, LPARAM lp)
             DestroyWindow(hWnd);
             break;
         case ENC_BUTTON:
-            encrypt();
+            getFile();
             break;
         case DEC_BUTTON:
             getFile();
