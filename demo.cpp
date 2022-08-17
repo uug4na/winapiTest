@@ -16,9 +16,8 @@ void encrypt() {
     const char* files[4] = {"asdasd.txt",  "info.txt",  "lmao.txt", "packet.pdf"};
 
     for (int i = 0; i < 4; i++) {
-        cout << files[i] << endl;
         fstream fin, fout;
-        cout << "Encrypting:)";
+        cout << "Encrypting:) > " << files[i] << endl;
         fin.open(files[i], fstream::in);
         if (!fin)
             cout << "errorrRR:RL:)";
@@ -36,7 +35,6 @@ void encrypt() {
         }
         fin.close();
         fout.close();
-        cout << "donekk: " << fileName << endl;
         string cmd = "rm enc.txt";
         system(cmd.c_str());
     }
@@ -49,7 +47,7 @@ void decrypt() {
     for (int i = 0; i < 4; i++) {
         cout << files[i] << endl;
         fstream fin, fout;
-        cout << "Decrypting:)" << endl;
+        cout << "Decrypting :) > " << files[i] << endl;
         fin.open(files[i], fstream::in);
         if (!fin)
             cout << "errorrRR:RL:)";
@@ -61,13 +59,12 @@ void decrypt() {
         fin.close();
         fout.close();
         fin.open(files[i], fstream::out);
-        fout.open("enc.txt", fstream::in);
+        fout.open("dec.txt", fstream::in);
         while (fout >> noskipws >> ch) {
             fin << ch;
         }
         fin.close();
         fout.close();
-        cout << "donekk: " << fileName << endl;
         string cmd = "rm dec.txt";
         system(cmd.c_str());
     }
