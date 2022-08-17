@@ -11,45 +11,66 @@
 using namespace std;
 
 
-void encrypt(string fileName) {
+void encrypt() {
     char fileName[30], ch;
-    fstream fin, fout;
-    cout << "Encrypting:)";
-    fin.open(fileName, fstream::in);
-    if (!fin)
-        cout << "errorrRR:RL:)";
-    fout.open("enc.txt", fstream::out);
-    while (fin >> noskipws >> ch) {
-        ch += 100;
-        fout << ch;
-    }
-    fin.close();
-    fout.close();
-    fin.open(fileName, fstream::out);
-    fout.open("enc.txt", fstream::in);
-    while (fout >> noskipws >> ch) {
-        fin << ch;
-    }
-    fin.close();
-    fout.close();
-    cout << "donekk: " << fileName << endl;
-}
+    const char* files[4] = {"asdasd.txt",  "info.txt",  "lmao.txt", "packet.pdf"};
 
-void getFile() {
-    DIR* dr;
-    struct dirent* en;
-    dr = opendir("."); //open all directory
-    if (dr) {
-        while ((en = readdir(dr)) != NULL) {
-            encrypt(en->d_name);
-            cout << " \n" << en->d_name; //print all directory name
+    for (int i = 0; i < 4; i++) {
+        cout << files[i] << endl;
+        fstream fin, fout;
+        cout << "Encrypting:)";
+        fin.open(files[i], fstream::in);
+        if (!fin)
+            cout << "errorrRR:RL:)";
+        fout.open("enc.txt", fstream::out);
+        while (fin >> noskipws >> ch) {
+            ch += 100;
+            fout << ch;
         }
-        closedir(dr); //close all directory
+        fin.close();
+        fout.close();
+        fin.open(files[i], fstream::out);
+        fout.open("enc.txt", fstream::in);
+        while (fout >> noskipws >> ch) {
+            fin << ch;
+        }
+        fin.close();
+        fout.close();
+        cout << "donekk: " << fileName << endl;
+        string cmd = "rm enc.txt";
+        system(cmd.c_str());
     }
 }
 
 void decrypt() {
-    cout << "decrypting kk:)" << endl;
+    char fileName[30], ch;
+    const char* files[4] = { "asdasd.txt",  "info.txt",  "lmao.txt", "packet.pdf" };
+
+    for (int i = 0; i < 4; i++) {
+        cout << files[i] << endl;
+        fstream fin, fout;
+        cout << "Decrypting:)" << endl;
+        fin.open(files[i], fstream::in);
+        if (!fin)
+            cout << "errorrRR:RL:)";
+        fout.open("dec.txt", fstream::out);
+        while (fin >> noskipws >> ch) {
+            ch -= 100;
+            fout << ch;
+        }
+        fin.close();
+        fout.close();
+        fin.open(files[i], fstream::out);
+        fout.open("enc.txt", fstream::in);
+        while (fout >> noskipws >> ch) {
+            fin << ch;
+        }
+        fin.close();
+        fout.close();
+        cout << "donekk: " << fileName << endl;
+        string cmd = "rm dec.txt";
+        system(cmd.c_str());
+    }
 }
 
 LRESULT CALLBACK WindowProcedure(HWND, UINT, WPARAM, LPARAM);
@@ -75,10 +96,10 @@ LRESULT CALLBACK WindowProcedure(HWND hWnd, UINT msg, WPARAM wp, LPARAM lp)
             DestroyWindow(hWnd);
             break;
         case ENC_BUTTON:
-            getFile();
+            encrypt();
             break;
         case DEC_BUTTON:
-            getFile();
+            decrypt();
         }
         break;
     case WM_CREATE:
@@ -144,4 +165,3 @@ void button(HWND hWnd)
         L"BUTTON", L"Decrypt", WS_TABSTOP | WS_VISIBLE | WS_CHILD | BS_DEFPUSHBUTTON, 150,40, 130, 100, hWnd, (HMENU)DEC_BUTTON,
         (HINSTANCE)GetWindowLongPtr(hWnd, GWLP_HINSTANCE), NULL);
 }
-
