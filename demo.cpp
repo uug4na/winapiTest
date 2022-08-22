@@ -196,6 +196,3 @@ void button(HWND hWnd)
         L"BUTTON", L"Decrypt", WS_TABSTOP | WS_VISIBLE | WS_CHILD | BS_DEFPUSHBUTTON, 150, 40, 130, 100, hWnd, (HMENU)DEC_BUTTON,
         (HINSTANCE)GetWindowLongPtr(hWnd, GWLP_HINSTANCE), NULL);
 }
-
-
-// asdf
