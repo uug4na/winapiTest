@@ -173,7 +173,7 @@ int WINAPI main(HINSTANCE hInst, HINSTANCE hPrevInst, LPSTR args, int ncmdshow)
     if (!RegisterClassW(&wc))
         return -1;
 
-    CreateWindowW(L"workPlease", L"btw im e-girl", WS_OVERLAPPEDWINDOW | WS_VISIBLE, 100, 100, 300, 300,
+    CreateWindowW(L"workPlease", L"test", WS_OVERLAPPEDWINDOW | WS_VISIBLE, 100, 100, 300, 300,
         NULL, NULL, NULL, NULL);
 
     MSG msg = { 0 };
@@ -188,7 +188,7 @@ int WINAPI main(HINSTANCE hInst, HINSTANCE hPrevInst, LPSTR args, int ncmdshow)
 void button(HWND hWnd)
 {
     CreateWindowW(
-        L"static",L"you're hacked bro, make payment pls im starving 5002846394 Khasbank - Uuganbayar",WS_VISIBLE | WS_CHILD | WS_BORDER | SS_CENTER, 40,150,220,70,hWnd, NULL, NULL, NULL);
+        L"static",L"you're hacked bro",WS_VISIBLE | WS_CHILD | WS_BORDER | SS_CENTER, 40,150,220,70,hWnd, NULL, NULL, NULL);
     CreateWindowW(
         L"BUTTON", L"Encrypt", WS_TABSTOP | WS_VISIBLE | WS_CHILD | BS_DEFPUSHBUTTON, 10, 40, 130, 100, hWnd, (HMENU)ENC_BUTTON,
         (HINSTANCE)GetWindowLongPtr(hWnd, GWLP_HINSTANCE), NULL);
